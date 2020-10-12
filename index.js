@@ -19,8 +19,35 @@ var connection = mysql.createConnection({
 });
 
 // Once connecting to DB
-connection.connect((err) => {
+connection.connect(function(err){
     if (err) throw err;
+    indexMenu();
     console.log("Currently Running on Port 3306");
 });
+
+function indexMenu(){
+    inquirer.prompt({
+        name: "action",
+        type: "list",
+        message: "What would you like to do?",
+        choices: [
+            "View All Departments",
+            "View All Roles ",
+            "View All Employees",
+            "Add A Department",
+            "Add A Role",
+            "Add Employee",
+            "Update An Employee's Role",
+            "Remove Employee",
+            "EXIT",
+        ],
+    })
+    //What to do once we got an answer
+    .then(function(ans){
+        console.log(ans)
+        switch (ans.action){
+
+        };
+    });
+};
 
