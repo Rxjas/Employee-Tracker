@@ -46,7 +46,41 @@ function indexMenu(){
     .then(function(ans){
         console.log(ans)
         switch (ans.action){
+            case "View All Departments":
+                allDepartments(); 
+                break;
+            
+            case "View All Roles":
+                allRoles();
+                break;
 
+            case "View All Employees":
+                allEmployees();
+                break;
+
+            case "Add A Department":
+                addDepartment();
+                break;
+
+            case "Add A Role":
+                addRole();
+                break;
+            
+            case "Add Employee":
+                addEmployee();
+                break;
+
+            case "Update An Employee's Role":
+                updateEmployeeRole();
+                break;
+
+            case "Remove Employee":
+                removeEmployee();
+                break;
+
+            case "EXIT":
+                connection.end();
+                break;
         };
     });
 };
