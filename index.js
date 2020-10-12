@@ -182,7 +182,6 @@ function addRole(){
     //query so The function is able to match the user choice to the id of role
     var query = "SELECT * FROM myemployees_db.department";
     connection.query(query, function(err,res){
-        console.log(res)
         inquirer.prompt([{
             name: "title",
             type: "input",
@@ -201,7 +200,6 @@ function addRole(){
         },
         ])
         .then(function(data){
-            console.log(data)
            let departmentID = null;
            //Loop to check matching id and departments
            for(let i = 0; i < res.length; i++){
@@ -223,32 +221,52 @@ function addRole(){
 };
 
 function addEmployee(){
-    inquirer.prompt(
-    {
-        name: "role",
-        type: 'input',
-        message: "What is the name of the Role you would like to add?"
-    },
-    {
-        name: "salary",
-        type: 'input',
-        message: "What is the Salary of the Role?"
-    },
-    {
-        name: "department",
-        type: 'input',
-        message: "What Department is the Role in?"
-    }
-    )
-    .then(function(data){
-        var query = "INSERT INTO department (name)"
-        query += "VALUES (?)";
-        connection.query(query, data.department, function(err, res) {
-          if (err) throw err;
-            console.log("Department Successfully Added!")
-            indexMenu();
+    //query so The function is able to match the user choice to the id of role
+    var query = "SELECT * FROM myemployees_db.role";
+    connection.query(query, function(err,res){
+        console.log(res)
+        inquirer.prompt([{
+            name: "firstname",
+            type: "input",
+            message: "What is the First Name of the New Employee?"
+        },
+        {
+            name: "lastname",
+            type: "input",
+            message: "What is the Last Name of the New Employee?"
+        },
+        {
+            name: "job",
+            type: "list",
+            message: "What is the Role of the New Employee?",
+            choices: roleArr
+        },
+        // {
+        //     name: "manager",
+        //     type: "input",
+        //     message: "What is the Role of the New Employee?",
+        //     choices: roleArr
+        // },
+        ])
+        .then(function(data){
+           let roleID = null;
+           //Loop to check matching id and roles
+           for(let i = 0; i < res.length; i++){
+                if(res[i].title == data.job){
+                    roleID = res[i].role_id;
+                }
+           }
+           //Query to insert the info into the DB
+           connection.query("INSERT INTO employee (first_name, last_name, role_id) VALUES(?,?,?)",
+           [data.firstname, data.lastname, roleID], 
+           function (err, res){
+               if (err) throw err
+               indexMenu();
+            }
+           )
         });
-    });
+
+   });
 };
 
 function updateEmployeeRole(){
