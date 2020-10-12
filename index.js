@@ -1,4 +1,5 @@
 // Adding in requirements
+var fs = require("fs");
 var mysql = require("mysql");
 var inquirer = require ("inquirer");
 var cTable = require ("console.table");
@@ -25,6 +26,7 @@ connection.connect(function(err){
     console.log("Currently Running on Port 3306");
 });
 
+//Menu which we will handle what the user wants
 function indexMenu(){
     inquirer.prompt({
         name: "action",
@@ -32,7 +34,7 @@ function indexMenu(){
         message: "What would you like to do?",
         choices: [
             "View All Departments",
-            "View All Roles ",
+            "View All Roles",
             "View All Employees",
             "Add A Department",
             "Add A Role",
@@ -44,7 +46,6 @@ function indexMenu(){
     })
     //What to do once we got an answer
     .then(function(ans){
-        console.log(ans)
         switch (ans.action){
             case "View All Departments":
                 allDepartments(); 
@@ -83,5 +84,46 @@ function indexMenu(){
                 break;
         };
     });
+};
+
+function allDepartments(){
+    console.log("working1")
+    indexMenu();
+
+};
+
+function allRoles(){
+    console.log("working88")
+    indexMenu();
+};
+
+function allEmployees(){
+    console.log("working2")
+    indexMenu();
+};
+
+function addDepartment(){
+    console.log("working3")
+    indexMenu();
+};
+
+function addRole(){
+    console.log("working4")
+    indexMenu();
+};
+
+function addEmployee(){
+    console.log("working5")
+    indexMenu();
+};
+
+function updateEmployeeRole(){
+    console.log("working6")
+    indexMenu();
+};
+
+function removeEmployee(){
+    console.log("working7")
+    indexMenu();
 };
 
