@@ -3,7 +3,7 @@ var fs = require("fs");
 var mysql = require("mysql");
 var inquirer = require ("inquirer");
 var cTable = require ("console.table");
-
+var 
 // creating the setup for the connection to the database
 var connection = mysql.createConnection({
     host:"localhost",
@@ -125,18 +125,79 @@ function allEmployees(){
 };
 
 function addDepartment(){
-    console.log("working3")
-    indexMenu();
+    inquirer.prompt({
+        name: "department",
+        type: 'input',
+        message: "What is the name of the Department you would like to add?"
+    })
+    .then(function(data){
+        var query = "INSERT INTO department (name)"
+        query += "VALUES (?)";
+        connection.query(query, data.department, function(err, res) {
+          if (err) throw err;
+            console.log("Department Successfully Added!")
+            indexMenu();
+        });
+    });
+
 };
 
 function addRole(){
-    console.log("working4")
-    indexMenu();
+    inquirer.prompt(
+    {
+        name: "role",
+        type: 'input',
+        message: "What is the name of the Role you would like to add?"
+    },
+    {
+        name: "salary",
+        type: 'input',
+        message: "What is the Salary of the Role?"
+    },
+    {
+        name: "role",
+        type: 'input',
+        message: "What is the name of the Role you would like to add?"
+    }
+    )
+    .then(function(data){
+        var query = "INSERT INTO department (name)"
+        query += "VALUES (?)";
+        connection.query(query, data.department, function(err, res) {
+          if (err) throw err;
+            console.log("Department Successfully Added!")
+            indexMenu();
+        });
+    });
 };
 
 function addEmployee(){
-    console.log("working5")
-    indexMenu();
+    inquirer.prompt(
+    {
+        name: "role",
+        type: 'input',
+        message: "What is the name of the Role you would like to add?"
+    },
+    {
+        name: "salary",
+        type: 'input',
+        message: "What is the Salary of the Role?"
+    },
+    {
+        name: "role",
+        type: 'input',
+        message: "What is the name of the Role you would like to add?"
+    }
+    )
+    .then(function(data){
+        var query = "INSERT INTO department (name)"
+        query += "VALUES (?)";
+        connection.query(query, data.department, function(err, res) {
+          if (err) throw err;
+            console.log("Department Successfully Added!")
+            indexMenu();
+        });
+    });
 };
 
 function updateEmployeeRole(){
