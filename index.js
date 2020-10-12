@@ -3,8 +3,13 @@ var fs = require("fs");
 var mysql = require("mysql");
 var inquirer = require ("inquirer");
 var cTable = require ("console.table");
-var 
-// creating the setup for the connection to the database
+
+//Arrays to push the roles, employees and departments
+var departmentArr = [];
+var roleArr = [];
+var employeeArr = [];
+
+//* creating the setup for the connection to the database
 var connection = mysql.createConnection({
     host:"localhost",
 
@@ -19,14 +24,16 @@ var connection = mysql.createConnection({
     database: "myEmployees_DB"
 });
 
-// Once connecting to DB
+// **Once connecting to DB
 connection.connect(function(err){
     if (err) throw err;
     indexMenu();
     console.log("Currently Running on Port 3306");
 });
 
-//Menu which we will handle what the user wants
+
+
+//***Menu which we will handle what the user wants
 function indexMenu(){
     inquirer.prompt({
         name: "action",
@@ -84,8 +91,35 @@ function indexMenu(){
                 break;
         };
     });
+    pushDepartments();
+    pushRoles();
 };
 
+//****functions to get information on databases and push to arrays for later
+function pushDepartments(){
+    connection.query("SELECT name FROM myemployees_db.department",function(err, res){
+        if (err) throw err
+        //Must empty the array everytime so as to update it
+        departmentArr = [];
+        for (var i = 0; i < res.length; i++){
+            departmentArr.push(res[i].name);
+        }
+    });
+};
+
+function pushRoles(){
+    connection.query("SELECT title FROM myemployees_db.role",function(err, res){
+        if (err) throw err
+        roleArr = [];
+        for (var i = 0; i < res.length; i++){
+            roleArr.push(res[i].title);
+        }
+    });
+};
+
+
+
+//*****Queries for what the user decides to do
 function allDepartments(){
     var query = "SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name "
     query += "FROM myemployees_db.employee "
@@ -156,8 +190,9 @@ function addRole(){
     },
     {
         name: "role",
-        type: 'input',
-        message: "What is the name of the Role you would like to add?"
+        type: 'list',
+        message: "What is the name of the Role you would like to add?",
+        choices: departmentArr
     }
     )
     .then(function(data){
@@ -184,9 +219,9 @@ function addEmployee(){
         message: "What is the Salary of the Role?"
     },
     {
-        name: "role",
+        name: "department",
         type: 'input',
-        message: "What is the name of the Role you would like to add?"
+        message: "What Department is the Role in?"
     }
     )
     .then(function(data){
