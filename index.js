@@ -176,34 +176,50 @@ function addDepartment(){
 
 };
 
+//When adding the role 2 queries must be made in order to allow the user to 
+//choose the department via list
 function addRole(){
-    inquirer.prompt(
-    {
-        name: "role",
-        type: 'input',
-        message: "What is the name of the Role you would like to add?"
-    },
-    {
-        name: "salary",
-        type: 'input',
-        message: "What is the Salary of the Role?"
-    },
-    {
-        name: "role",
-        type: 'list',
-        message: "What is the name of the Role you would like to add?",
-        choices: departmentArr
-    }
-    )
-    .then(function(data){
-        var query = "INSERT INTO department (name)"
-        query += "VALUES (?)";
-        connection.query(query, data.department, function(err, res) {
-          if (err) throw err;
-            console.log("Department Successfully Added!")
-            indexMenu();
+    //query so The function is able to match the user choice to the id of role
+    var query = "SELECT * FROM myemployees_db.department";
+    connection.query(query, function(err,res){
+        console.log(res)
+        inquirer.prompt([{
+            name: "title",
+            type: "input",
+            message: "What is the Title of the Role?"
+        },
+        {
+            name: "salary",
+            type: "input",
+            message: "What is the Salary of this Role?"
+        },
+        {
+            name: "department",
+            type: "list",
+            message: "What Department is the Role in?",
+            choices: departmentArr
+        },
+        ])
+        .then(function(data){
+            console.log(data)
+           let departmentID = null;
+           //Loop to check matching id and departments
+           for(let i = 0; i < res.length; i++){
+                if(res[i].name == data.department){
+                    departmentID = res[i].department_id;
+                }
+           }
+           //Query to insert the info into the DB
+           connection.query("INSERT INTO role (title, salary, department_id) VALUES(?,?,?)",
+           [data.title, data.salary, departmentID], 
+           function (err, res){
+               if (err) throw err
+               indexMenu();
+            }
+           )
         });
-    });
+
+   }); 
 };
 
 function addEmployee(){
