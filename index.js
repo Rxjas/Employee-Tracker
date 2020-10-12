@@ -33,8 +33,8 @@ function indexMenu(){
         type: "list",
         message: "What would you like to do?",
         choices: [
-            "View All Departments",
-            "View All Roles",
+            "View All Employees by Departments",
+            "View All Employees by Roles",
             "View All Employees",
             "Add A Department",
             "Add A Role",
@@ -47,11 +47,11 @@ function indexMenu(){
     //What to do once we got an answer
     .then(function(ans){
         switch (ans.action){
-            case "View All Departments":
+            case "View All Employees by Departments":
                 allDepartments(); 
                 break;
             
-            case "View All Roles":
+            case "View All Employees by Roles":
                 allRoles();
                 break;
 
@@ -87,19 +87,41 @@ function indexMenu(){
 };
 
 function allDepartments(){
-    console.log("working1")
-    indexMenu();
-
+    var query = "SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name "
+    query += "FROM myemployees_db.employee "
+    query += "INNER JOIN role ON (employee.role_id = role.role_id) "
+    query += "INNER JOIN department ON (role.role_id = department.department_id) "
+    query += "ORDER BY department.name";
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+        console.table(res)
+        indexMenu();
+    });
 };
 
 function allRoles(){
-    console.log("working88")
-    indexMenu();
+    var query = "SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name "
+    query += "FROM myemployees_db.employee "
+    query += "INNER JOIN role ON (employee.role_id = role.role_id) "
+    query += "INNER JOIN department ON (role.role_id = department.department_id) "
+    query += "ORDER BY  role.title";
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+        console.table(res)
+        indexMenu();
+    });
 };
 
 function allEmployees(){
-    console.log("working2")
-    indexMenu();
+    var query = "SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name "
+    query += "FROM myemployees_db.employee INNER JOIN role ON (employee.role_id = role.role_id) "
+    query += "INNER JOIN department ON (role.role_id = department.department_id) "
+    query += "ORDER BY employee.employee_id";
+    connection.query(query, function(err, res) {
+      if (err) throw err;
+        console.table(res)
+        indexMenu();
+    });
 };
 
 function addDepartment(){
