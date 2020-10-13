@@ -47,7 +47,6 @@ function indexMenu(){
             "Add A Role",
             "Add Employee",
             "Update An Employee's Role",
-            "Remove Employee",
             "EXIT",
         ],
     })
