@@ -93,6 +93,7 @@ function indexMenu(){
     });
     pushDepartments();
     pushRoles();
+    pushEmployees();
 };
 
 //****functions to get information on databases and push to arrays for later
@@ -113,6 +114,16 @@ function pushRoles(){
         roleArr = [];
         for (var i = 0; i < res.length; i++){
             roleArr.push(res[i].title);
+        }
+    });
+};
+
+function pushEmployees(){
+    connection.query("SELECT CONCAT(employee.first_name,' ',employee.last_name) AS name FROM myemployees_db.employee",function(err, res){
+        if (err) throw err
+        employeeArr = [];
+        for (var i = 0; i < res.length; i++){
+            employeeArr.push(res[i].name);
         }
     });
 };
@@ -145,7 +156,7 @@ function allRoles(){
         indexMenu();
     });
 };
-
+//add departments and such-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 function allEmployees(){
     var query = "SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name "
     query += "FROM myemployees_db.employee INNER JOIN role ON (employee.role_id = role.role_id) "
@@ -224,8 +235,8 @@ function addEmployee(){
     //query so The function is able to match the user choice to the id of role
     var query = "SELECT * FROM myemployees_db.role";
     connection.query(query, function(err,res){
-        console.log(res)
-        inquirer.prompt([{
+        inquirer.prompt([
+        {
             name: "firstname",
             type: "input",
             message: "What is the First Name of the New Employee?"
@@ -240,7 +251,7 @@ function addEmployee(){
             type: "list",
             message: "What is the Role of the New Employee?",
             choices: roleArr
-        },
+        }
         // {
         //     name: "manager",
         //     type: "input",
@@ -270,8 +281,40 @@ function addEmployee(){
 };
 
 function updateEmployeeRole(){
-    console.log("working6")
-    indexMenu();
+    connection.query("SELECT * FROM myemployees_db.role", function(err,res1){
+        inquirer.prompt([
+            {
+                name: "person",
+                type: "list",
+                message: "Which Employee would you like to Update?",
+                choices: employeeArr
+            },
+            {
+                name: "job",
+                type: "list",
+                message: "What is the Employee's new Role?",
+                choices: roleArr
+            },
+        ])
+        .then(function(data){
+            let roleID = null;
+            for (let b = 0; b < roleArr.length; b++){
+                if(res1[b].title = data.job){
+                    roleID = res1[b].role_id;
+                }
+            }
+                //second query to update the info3
+                var query = "UPDATE employee SET role_id = ? " 
+                query += "WHERE employee_id = (SELECT employee_id FROM " 
+                query += "(SELECT employee_id FROM employee WHERE CONCAT(first_name,' ',last_name) = ? )AS NAME)"
+                connection.query(query, 
+                    [roleID, data.person], 
+                    function(err,res){
+                    if (err) throw err
+                    indexMenu();
+                })
+        });
+    });
 };
 
 function removeEmployee(){
