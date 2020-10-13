@@ -82,10 +82,6 @@ function indexMenu(){
                 updateEmployeeRole();
                 break;
 
-            case "Remove Employee":
-                removeEmployee();
-                break;
-
             case "EXIT":
                 connection.end();
                 break;
@@ -317,8 +313,5 @@ function updateEmployeeRole(){
     });
 };
 
-function removeEmployee(){
-    console.log("working7")
-    indexMenu();
-};
+
 
