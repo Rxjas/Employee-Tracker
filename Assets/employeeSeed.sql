@@ -60,3 +60,22 @@ VALUES ("Represenative", 70000, 3);
 
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ("Caleb", "Red", 3);
+
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ("Connor", "Reed", 3);
+
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ("Cob", "Reeps", 2);
+
+INSERT INTO employee (first_name, last_name, role_id)
+VALUES ("Haley", "Reeps", 1);
+
+SELECT CONCAT(employee.first_name, ' ' ,  employee.last_name) AS Name FROM employee;
+
+UPDATE employee SET role_id = 1 WHERE employee_id = (SELECT employee_id FROM (SELECT employee_id FROM employee WHERE CONCAT(first_name," ",last_name) = "Jane Blue")AS NAME);
+
+SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name
+FROM employee
+INNER JOIN role ON (employee.role_id = role.role_id)
+INNER JOIN department ON (role.role_id = department.department_id)
+ORDER BY department.name;

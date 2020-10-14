@@ -43,6 +43,8 @@ function indexMenu(){
             "View All Employees by Departments",
             "View All Employees by Roles",
             "View All Employees",
+            "View All Roles",
+            "View All Departments",
             "Add A Department",
             "Add A Role",
             "Add Employee",
@@ -54,15 +56,23 @@ function indexMenu(){
     .then(function(ans){
         switch (ans.action){
             case "View All Employees by Departments":
-                allDepartments(); 
+                employeeByDepartment(); 
                 break;
             
             case "View All Employees by Roles":
-                allRoles();
+                employeeByRole();
                 break;
 
             case "View All Employees":
                 allEmployees();
+                break;
+            
+            case "View All Roles":
+                allRoles();
+                break;
+
+            case "View All Departments":
+                allDepartments();
                 break;
 
             case "Add A Department":
@@ -126,7 +136,7 @@ function pushEmployees(){
 
 
 //*****Queries for what the user decides to do
-function allDepartments(){
+function employeeByDepartment(){
     var query = "SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name "
     query += "FROM myemployees_db.employee "
     query += "INNER JOIN role ON (employee.role_id = role.role_id) "
@@ -139,7 +149,7 @@ function allDepartments(){
     });
 };
 
-function allRoles(){
+function employeeByRole(){
     var query = "SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name "
     query += "FROM myemployees_db.employee "
     query += "INNER JOIN role ON (employee.role_id = role.role_id) "
@@ -151,6 +161,7 @@ function allRoles(){
         indexMenu();
     });
 };
+
 //add departments and such-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 function allEmployees(){
     var query = "SELECT employee.employee_id, employee.first_name,employee.last_name, role.title, department.name "
@@ -159,6 +170,24 @@ function allEmployees(){
     query += "ORDER BY employee.employee_id";
     connection.query(query, function(err, res) {
       if (err) throw err;
+        console.table(res)
+        indexMenu();
+    });
+};
+
+function allRoles(){
+    var query = "SELECT title, salary, name FROM myemployees_db.role INNER JOIN myemployees_db.department ON (role.role_id = department.department_id)";
+    connection.query(query, function (err, res){
+        if(err) throw err
+        console.table(res)
+        indexMenu();
+    });
+};
+
+function allDepartments(){
+    var query = "SELECT name FROM myemployees_db.department";
+    connection.query(query, function (err, res){
+        if(err) throw err
         console.table(res)
         indexMenu();
     });
